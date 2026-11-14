@@ -28,13 +28,18 @@
   // Report height to the parent page so the iframe grows with the schedule.
   (function () {
     let last = 0;
-    const send = () => {
-      const h = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
-      if (Math.abs(h - last) > 2) { last = h; parent.postMessage({ type: 'nxg_schedule_resize', height: h }, '*'); }
+    const post = h => parent.postMessage({ type: 'nxg_schedule_resize', height: h }, '*');
+    const height = () => Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+    const send = (force) => {
+      const h = height();
+      if (force === true || Math.abs(h - last) > 2) { last = h; post(h); }
     };
-    new ResizeObserver(send).observe(document.body);
-    new MutationObserver(send).observe(document.body, { childList: true, subtree: true });
-    setInterval(send, 1000);
+    // Parent page asks for the height once its script is ready.
+    addEventListener('message', e => { if (e.data && e.data.type === 'nxg_ping') send(true); });
+    new ResizeObserver(() => send()).observe(document.body);
+    new MutationObserver(() => send()).observe(document.body, { childList: true, subtree: true });
+    // Re-send periodically too, in case a message was missed.
+    setInterval(() => send(true), 1500);
   })();
 </script>
 </body>

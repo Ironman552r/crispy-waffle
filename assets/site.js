@@ -118,14 +118,23 @@
   // Private lessons: Momence appointments board 160658.
   function wireEmbed(shell, iframe, matchType) {
     const loader = shell.querySelector('.embed-loading');
-    iframe.addEventListener('load', () => setTimeout(() => loader && loader.classList.add('done'), 600));
+    const hideLoader = () => loader && loader.classList.add('done');
     addEventListener('message', e => {
       const d = e.data || {};
       const h = +d.height;
       if (!d.type || !String(d.type).match(matchType) || isNaN(h) || h < 50) return;
-      iframe.style.height = Math.ceil(h) + 'px';
-      loader && loader.classList.add('done');
+      const max = +shell.dataset.maxHeight || Infinity;   // optional cap, e.g. on the home page
+      iframe.style.height = Math.ceil(Math.min(h, max)) + 'px';
+      hideLoader();
     });
+    // The iframe may finish loading before this script runs (common on slower hosts),
+    // so don't rely only on the load event: check its state, ask it for its height,
+    // and never leave the loading cover up for more than a few seconds.
+    const ping = () => { try { iframe.contentWindow.postMessage({ type: 'nxg_ping' }, '*'); } catch (e) {} };
+    iframe.addEventListener('load', () => { ping(); setTimeout(hideLoader, 600); });
+    try { if (iframe.contentDocument && iframe.contentDocument.readyState === 'complete' && iframe.contentDocument.body) { ping(); setTimeout(hideLoader, 600); } } catch (e) {}
+    ping();
+    setTimeout(hideLoader, 6000);
   }
   document.querySelectorAll('[data-momence="schedule"]').forEach(shell => {
     const iframe = shell.querySelector('iframe');
