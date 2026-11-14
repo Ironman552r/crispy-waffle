@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Camps | NXG Tennis</title>
+<meta name="description" content="NXG Tennis camps: Thanksgiving, Christmas, Spring Break and Summer. 3-hour and 5-hour options, max 6 players per coach.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  .perks{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:40px}
+  .perk{display:flex;gap:12px;align-items:center;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px 16px;font-size:14px;color:rgba(255,255,255,.85)}
+  .perk svg{width:22px;height:22px;color:var(--blue-400);flex-shrink:0}
+
+  .filters{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:28px}
+  .camp-list{display:grid;gap:20px}
+  .camp{display:grid;grid-template-columns:300px 1fr;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:#fff;transition:box-shadow .3s, transform .3s}
+  .camp:hover{box-shadow:var(--shadow-lg)}
+  .camp.past{opacity:.55}
+  .camp-head{position:relative;color:#fff;padding:28px;display:flex;flex-direction:column;isolation:isolate;overflow:hidden;background:var(--ink-2)}
+  .camp-head::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(320px 240px at 100% 0%, var(--c), transparent 70%), linear-gradient(170deg, color-mix(in srgb, var(--c) 35%, #0a0c11), #0a0c11)}
+  .camp-head::after{content:"";position:absolute;right:-60px;bottom:-60px;width:180px;height:180px;border-radius:50%;border:28px solid rgba(255,255,255,.06);z-index:-1}
+  .camp-head h3{font-size:40px;margin-top:14px}
+  .camp-head .date{display:flex;align-items:center;gap:8px;margin-top:auto;padding-top:24px;font-weight:700;font-size:18px}
+  .camp-head .date svg{width:20px;height:20px}
+  .camp-head .where{font-size:14px;opacity:.75;margin-top:4px}
+  .camp-head p{font-size:14px;opacity:.75;margin-top:8px}
+  .tracks{display:grid;grid-template-columns:1fr 1fr}
+  .track{padding:26px 28px;display:flex;flex-direction:column;gap:6px}
+  .track + .track{border-left:1px solid var(--line)}
+  .track .lvl{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .track h4{font-size:18px}
+  .track .balls{font-size:13px;color:var(--muted)}
+  .track .row{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;margin-top:6px}
+  .track .row span{display:flex;align-items:center;gap:6px}
+  .track .row svg{width:16px;height:16px;color:var(--blue)}
+  .track .focus{font-size:13px;color:var(--muted);margin-top:4px}
+  .track .focus b{color:var(--text);font-weight:600}
+  .track .buy{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-top:auto;padding-top:18px}
+  .price{font-family:var(--display);font-weight:800;font-size:40px;line-height:1}
+  .price small{font-family:var(--body);font-size:13px;font-weight:500;color:var(--muted);margin-left:4px}
+
+  .flex-card{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:0;border-radius:var(--radius);overflow:hidden;background:var(--blue);color:#fff;margin-top:20px}
+  .flex-card > div{padding:32px}
+  .flex-card > div + div{border-left:1px solid rgba(255,255,255,.18)}
+  .flex-card h3{font-size:40px}
+  .flex-card p{opacity:.85;margin-top:8px;font-size:15px}
+  .flex-card .price{font-size:52px}
+  .flex-card .price small{color:rgba(255,255,255,.75)}
+  .flex-card .lbl{font-weight:600;opacity:.85;margin-bottom:8px}
+
+  .founders{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .founder{display:flex;gap:18px;align-items:center}
+  .avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--blue),#062a7a);color:#fff;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:28px;flex-shrink:0}
+  .founder h4{font-size:18px}
+  .founder p{color:var(--muted);font-size:14px}
+
+  .empty{padding:40px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:var(--radius)}
+
+  @media (max-width:1000px){
+    .perks{grid-template-columns:1fr 1fr}
+    .camp{grid-template-columns:1fr}
+    .flex-card{grid-template-columns:1fr}
+    .flex-card > div + div{border-left:0;border-top:1px solid rgba(255,255,255,.18)}
+  }
+  @media (max-width:640px){
+    .perks{grid-template-columns:1fr}
+    .tracks{grid-template-columns:1fr}
+    .track + .track{border-left:0;border-top:1px solid var(--line)}
+    .founders{grid-template-columns:1fr}
+    .seg{width:100%;overflow-x:auto}
+  }
+</style>
+</head>
+<body>
+<div data-header></div>
+
+<main id="main">
+  <section class="page-hero">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a><span>/</span><span>Camps</span></nav>
+      <span class="eyebrow">Seasonal camps</span>
+      <h1 class="display h2" style="font-size:clamp(52px,8vw,104px)">School's out.<br><span class="accent">Development doesn't stop.</span></h1>
+      <p class="lead">Holiday and summer camps for every level, from red ball beginners to high-performance juniors.</p>
+      <div class="perks">
+        <div class="perk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>3-hour &amp; 5-hour options</div>
+        <div class="perk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><circle cx="17" cy="9.5" r="2.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5M15 14.6c2.8-.4 5.4 1.2 6.3 4.4"/></svg>Max 6 players per coach</div>
+        <div class="perk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5"/></svg>College players coaching</div>
+        <div class="perk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg>Flexible weekly summer option</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="filters">
+        <div class="seg" role="tablist" id="campFilter">
+          <button role="tab" data-f="all" aria-selected="true">All camps</button>
+          <button role="tab" data-f="holiday" aria-selected="false">Holiday</button>
+          <button role="tab" data-f="summer" aria-selected="false">Summer</button>
+        </div>
+        <label style="display:flex;gap:8px;align-items:center;font-size:14px;color:var(--muted);cursor:pointer">
+          <input type="checkbox" id="hidePast" checked style="accent-color:var(--blue);width:16px;height:16px"> Hide past camps
+        </label>
+      </div>
+      <div class="camp-list" id="campList"></div>
+      <div id="flexSlot"></div>
+    </div>
+  </section>
+
+  <section class="section bg-mist">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">Led by</span>
+          <h2 class="display h2">The people behind <span class="accent">NXG</span></h2>
+        </div>
+      </div>
+      <div class="founders">
+        <div class="card founder reveal"><div class="avatar">AC</div><div><h4>Ambrose Coleman</h4><p>Co-founder, CEO</p></div></div>
+        <div class="card founder reveal" data-delay="100"><div class="avatar">KD</div><div><h4>Killian Darneaux</h4><p>Co-founder, Tennis Director</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="cta-band reveal">
+        <div class="ring"></div>
+        <div>
+          <h2 class="display h2" style="font-size:clamp(44px,6vw,76px)">Not sure which<br>camp fits?</h2>
+          <p>Tell us about your player and our enrollment team will recommend the right track.</p>
+        </div>
+        <div class="actions">
+          <a class="btn btn-white" href="trial-form.html">Start questionnaire <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <a class="btn btn-ghost" href="mailto:enrollment@nxg.tennis">Email enrollment</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div data-footer></div>
+<script src="assets/site.js"></script>
+<script src="assets/camps-data.js"></script>
+<script>
+(function () {
+  const D = window.NXG_CAMPS, A = window.NXG.arrow;
+  const list = document.getElementById('campList');
+  const hidePast = document.getElementById('hidePast');
+  let filter = 'all';
+  const ico = {
+    cal: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg>',
+    clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+    pin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>'
+  };
+  const next = D.next();
+
+  function render() {
+    const rows = D.camps.filter(c => {
+      if (filter === 'summer' && c.season !== 'Summer') return false;
+      if (filter === 'holiday' && c.season === 'Summer') return false;
+      if (hidePast.checked && D.status(c) === 'past') return false;
+      return true;
+    });
+    list.innerHTML = rows.length ? rows.map(c => {
+      const st = D.status(c);
+      const badge = st === 'now' ? '<span class="badge live" style="background:#fff;color:#111">Happening now</span>'
+        : st === 'past' ? '<span class="badge dark">Completed</span>'
+        : (next && next.id === c.id) ? '<span class="badge ball">Next up</span>'
+        : `<span class="badge dark">${c.season}</span>`;
+      return `
+      <article class="camp${st === 'past' ? ' past' : ''}" id="${c.id}">
+        <div class="camp-head" style="--c:${c.color}">
+          <div>${badge}</div>
+          <h3 class="display">${c.name}</h3>
+          <p>${c.tagline}</p>
+          <div class="date">${ico.cal}${c.dates}</div>
+          ${c.location ? `<div class="where">${c.location}</div>` : ''}
+        </div>
+        <div class="tracks">
+          ${c.tracks.map(t => `
+            <div class="track">
+              <span class="lvl">${t.hours}-hour camp</span>
+              <h4>${t.label}</h4>
+              <span class="balls">${t.balls}</span>
+              <div class="row"><span>${ico.clock}${t.time}</span>${c.location ? `<span>${ico.pin}${c.location}</span>` : ''}</div>
+              ${t.focus ? `<p class="focus"><b>Focus:</b> ${t.focus}</p>` : ''}
+              <div class="buy">
+                <div class="price">${t.price}<small>/ ${t.unit}</small></div>
+                ${st === 'past'
+                  ? '<span class="badge muted">Closed</span>'
+                  : `<a class="btn btn-primary btn-sm" href="${t.link}" target="_blank" rel="noopener">Register ${A}</a>`}
+              </div>
+            </div>`).join('')}
+        </div>
+      </article>`;
+    }).join('') : '<div class="empty">No camps match this filter right now. Check back soon or <a href="mailto:enrollment@nxg.tennis" style="color:var(--blue);font-weight:600">email us</a>.</div>';
+
+    document.getElementById('flexSlot').innerHTML = (filter !== 'holiday') ? `
+      <div class="flex-card">
+        <div>
+          <span class="badge dark">Flexible enrollment</span>
+          <h3 class="display" style="margin-top:12px">Only need one week of summer camp?</h3>
+          <p>No need to register for the entire summer session! Choose the week that works best for your schedule.</p>
+        </div>
+        ${D.flex.map(f => `
+          <div>
+            <div class="lbl">${f.label}</div>
+            <div class="price">${f.price}<small>/ ${f.unit}</small></div>
+            <a class="btn btn-white btn-sm" style="margin-top:18px" href="${f.link}" target="_blank" rel="noopener">Pick a week ${A}</a>
+          </div>`).join('')}
+      </div>` : '';
+  }
+
+  document.querySelectorAll('#campFilter button').forEach(b => b.addEventListener('click', () => {
+    filter = b.dataset.f;
+    document.querySelectorAll('#campFilter button').forEach(x => x.setAttribute('aria-selected', x === b));
+    render();
+  }));
+  hidePast.addEventListener('change', render);
+  render();
+})();
+</script>
+</body>
+</html>

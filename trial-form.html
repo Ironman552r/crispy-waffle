@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free Trial Questionnaire | NXG Tennis</title>
+<meta name="description" content="Tell us about your player to book a free NXG Tennis trial.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  body{background:var(--mist)}
+  .form-page{padding:calc(var(--header-h) + 40px) 0 80px;min-height:100vh}
+  .form-grid{display:grid;grid-template-columns:300px 1fr;gap:32px;align-items:start}
+
+  /* sidebar */
+  .rail{position:sticky;top:calc(var(--header-h) + 24px);background:var(--ink);color:#fff;border-radius:var(--radius);padding:28px;overflow:hidden;isolation:isolate}
+  .rail::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(300px 220px at 100% 0%, rgba(10,92,255,.5), transparent 70%)}
+  .rail h1{font-size:40px;line-height:.92}
+  .rail > p{color:rgba(255,255,255,.65);font-size:14px;margin-top:10px}
+  .rail ol{list-style:none;margin-top:28px;display:grid;gap:4px}
+  .rail li button{all:unset;box-sizing:border-box;width:100%;display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;font-size:14px;font-weight:500;color:rgba(255,255,255,.55);cursor:default}
+  .rail li .dot{width:28px;height:28px;border-radius:50%;border:1.5px solid rgba(255,255,255,.25);display:grid;place-items:center;font-size:12px;font-weight:700;flex-shrink:0;transition:.25s}
+  .rail li.done button{color:rgba(255,255,255,.85);cursor:pointer}
+  .rail li.done button:hover{background:rgba(255,255,255,.06)}
+  .rail li.done .dot{background:var(--blue);border-color:var(--blue);color:#fff}
+  .rail li.active button{color:#fff;background:rgba(255,255,255,.08)}
+  .rail li.active .dot{border-color:#fff;background:#fff;color:var(--blue)}
+  .rail .help{margin-top:24px;padding-top:20px;border-top:1px solid rgba(255,255,255,.1);font-size:13px;color:rgba(255,255,255,.6)}
+  .rail .help a{color:#fff;font-weight:600}
+
+  /* form card */
+  .fcard{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--line);overflow:hidden}
+  .progress{height:4px;background:var(--blue-50)}
+  .progress i{display:block;height:100%;background:var(--blue);width:0;transition:width .4s cubic-bezier(.2,.8,.2,1)}
+  .fbody{padding:clamp(24px,4vw,44px)}
+  .step-label{font-size:13px;font-weight:600;color:var(--blue)}
+  .step h2{font-size:clamp(34px,4vw,48px);margin-top:6px}
+  .step > p.sub{color:var(--muted);margin-top:6px}
+  .step{animation:stepIn .4s cubic-bezier(.2,.8,.2,1)}
+  @keyframes stepIn{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:none}}
+  .fields{display:grid;grid-template-columns:1fr 1fr;gap:20px 18px;margin-top:28px}
+  .field{display:flex;flex-direction:column;gap:8px}
+  .field.full{grid-column:1/-1}
+  .field > label,.field > .q{font-size:14px;font-weight:600}
+  .req{color:var(--blue)}
+  .opt{font-weight:400;color:var(--muted)}
+  .input{width:100%;padding:13px 15px;border:1.5px solid var(--line);border-radius:12px;background:#fff;font-size:15px;transition:border-color .2s, box-shadow .2s}
+  .input:hover{border-color:#cfd5e2}
+  .input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 4px rgba(10,92,255,.12)}
+  textarea.input{min-height:120px;resize:vertical}
+  .field.invalid .input{border-color:#e11d48;box-shadow:0 0 0 4px rgba(225,29,72,.08)}
+  .err{display:none;font-size:13px;color:#e11d48}
+  .field.invalid .err{display:block}
+  .hint{font-size:13px;color:var(--muted)}
+
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{position:relative}
+  .chip input{position:absolute;opacity:0;pointer-events:none}
+  .chip span{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border:1.5px solid var(--line);border-radius:999px;font-size:14px;font-weight:500;cursor:pointer;transition:.18s;user-select:none;background:#fff}
+  .chip span:hover{border-color:#bcc6d8}
+  .chip input:checked + span{border-color:var(--blue);background:var(--blue-50);color:var(--blue);font-weight:600}
+  .chip input:focus-visible + span{outline:3px solid var(--blue-400);outline-offset:2px}
+  .chip input[type=checkbox] + span::before{content:"";width:16px;height:16px;border-radius:5px;border:1.5px solid #c3cbdb;transition:.18s;background:#fff center/12px no-repeat}
+  .chip input[type=checkbox]:checked + span::before{background-color:var(--blue);border-color:var(--blue);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5'%3E%3Cpath d='m5 12 5 5 9-10'/%3E%3C/svg%3E")}
+  .field.invalid .chips .chip span{border-color:#f3b4c2}
+
+  .loc-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .loc-card{position:relative}
+  .loc-card input{position:absolute;opacity:0}
+  .loc-card span{display:block;padding:18px;border:1.5px solid var(--line);border-radius:14px;cursor:pointer;transition:.18s;height:100%}
+  .loc-card b{display:block;font-size:16px}
+  .loc-card small{color:var(--muted);font-size:13px}
+  .loc-card input:checked + span{border-color:var(--blue);background:var(--blue-50);box-shadow:0 0 0 3px rgba(10,92,255,.1)}
+  .loc-card input:focus-visible + span{outline:3px solid var(--blue-400);outline-offset:2px}
+
+  .nav-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:20px clamp(24px,4vw,44px);border-top:1px solid var(--line);background:#fcfdff}
+  .nav-row .saved{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px}
+  .nav-row .saved svg{width:15px;height:15px;color:#16a34a}
+  .nav-row .btns{display:flex;gap:10px;margin-left:auto}
+  .btn[disabled]{opacity:.6;pointer-events:none}
+
+  .review{display:grid;gap:14px;margin-top:24px}
+  .rv{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .rv header{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;background:var(--mist);font-weight:700;font-size:14px}
+  .rv header button{border:0;background:none;color:var(--blue);font-weight:600;cursor:pointer;font-size:13px}
+  .rv dl{display:grid;grid-template-columns:minmax(160px,40%) 1fr;gap:0}
+  .rv dt,.rv dd{padding:10px 18px;font-size:14px;border-top:1px solid var(--line)}
+  .rv dt{color:var(--muted)}
+  .rv dd{font-weight:500;word-break:break-word}
+
+  .success{text-align:center;padding:clamp(40px,7vw,72px) clamp(24px,5vw,56px)}
+  .success .check{width:84px;height:84px;margin:0 auto 24px;border-radius:50%;background:var(--blue);display:grid;place-items:center;box-shadow:0 16px 40px rgba(10,92,255,.35);animation:pop .5s cubic-bezier(.2,1.6,.4,1)}
+  .success .check svg{width:40px;height:40px;color:#fff}
+  @keyframes pop{from{transform:scale(.4);opacity:0}}
+  .success h2{font-size:clamp(40px,5vw,60px)}
+  .success p{color:var(--muted);max-width:480px;margin:12px auto 0}
+  .success .actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:28px}
+  .notice{margin-top:22px;padding:14px 16px;border-radius:12px;background:#fff8e6;border:1px solid #f6dfa0;color:#7a5a00;font-size:14px;text-align:left}
+  .form-error{margin-top:16px;padding:12px 14px;border-radius:12px;background:#fff1f3;border:1px solid #fbc6d0;color:#b4123a;font-size:14px}
+
+  @media (max-width:1000px){
+    .form-grid{grid-template-columns:1fr}
+    .rail{position:static}
+    .rail ol{grid-auto-flow:column;grid-auto-columns:1fr;overflow-x:auto;gap:6px}
+    .rail li button{flex-direction:column;gap:6px;padding:8px 4px;font-size:11px;text-align:center}
+    .rail .help{display:none}
+  }
+  @media (max-width:640px){
+    .fields{grid-template-columns:1fr}
+    .loc-cards{grid-template-columns:1fr}
+    .rv dl{grid-template-columns:1fr}
+    .rv dt{border-top:1px solid var(--line);padding-bottom:0}
+    .rv dd{border-top:0;padding-top:4px}
+    .rail li button span.lbl{display:none}
+    .nav-row .saved{display:none}
+  }
+</style>
+</head>
+<body data-header-solid>
+<div data-header></div>
+
+<main id="main" class="form-page">
+  <div class="wrap form-grid">
+    <aside class="rail">
+      <span class="eyebrow" style="color:var(--blue-400)">Free trial</span>
+      <h1 class="display" style="margin-top:10px">Tell us about<br><span class="accent" style="color:var(--blue-400)">your player.</span></h1>
+      <p>It only takes a couple of minutes, and our enrollment team will take it from there.</p>
+      <ol id="rail"></ol>
+      <div class="help">Already have questions?<br><a href="mailto:enrollment@nxg.tennis">enrollment@nxg.tennis</a></div>
+    </aside>
+
+    <div class="fcard">
+      <div class="progress"><i id="bar"></i></div>
+      <form id="trialForm" novalidate>
+        <div aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden">
+          <label for="hp_company">Company</label><input id="hp_company" name="hp_company" type="text" tabindex="-1" autocomplete="off">
+        </div>
+        <div class="fbody" id="stepHost"></div>
+        <div class="nav-row" id="navRow">
+          <span class="saved" id="saved" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="m5 12 5 5 9-10"/></svg>Progress saved</span>
+          <div class="btns">
+            <button type="button" class="btn btn-outline" id="back">Back</button>
+            <button type="submit" class="btn btn-primary" id="next">Continue</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</main>
+
+<div data-footer></div>
+<script src="assets/site.js"></script>
+<script>
+/* ============================================================
+   FORM DELIVERY
+   Submissions are emailed to ENROLLMENT_EMAIL through FormSubmit
+   (formsubmit.co, free, no account needed).
+
+   ONE-TIME ACTIVATION: the very first submission makes FormSubmit
+   send an "Activate Form" email to ENROLLMENT_EMAIL. Click the
+   button in that email once; every submission after that arrives
+   as a formatted table. FormSubmit then also emails a random
+   alias (e.g. "a1b2c3d4e5..."). Paste it in FORMSUBMIT_ID to hide
+   the real address from the page source (optional).
+
+   To use Formspree / Getform / Apps Script instead, put that URL
+   in FORM_ENDPOINT; it takes priority over FormSubmit.
+   If sending ever fails, the form falls back to a pre-filled email.
+   ============================================================ */
+const ENROLLMENT_EMAIL = 'enrollment@nxg.tennis';
+const FORMSUBMIT_ID = '';   // optional alias from FormSubmit's activation email
+const FORM_ENDPOINT = '';   // optional override (e.g. https://formspree.io/f/xxxxxx)
+const ENDPOINT = FORM_ENDPOINT || `https://formsubmit.co/ajax/${FORMSUBMIT_ID || ENROLLMENT_EMAIL}`;
+
+/* ---- Questions: same as the original NXG free-trial form ---- */
+const STEPS = [
+  { id: 'parent', title: 'Parent / guardian', sub: "Who should our enrollment team contact?", fields: [
+    { name: 'parentName', label: 'Parent Name', type: 'text', autocomplete: 'name', full: true },
+    { name: 'mobile', label: 'Mobile', type: 'tel', autocomplete: 'tel', placeholder: '(214) 555-0123' },
+    { name: 'email', label: 'Email', type: 'email', autocomplete: 'email', placeholder: 'you@example.com' }
+  ]},
+  { id: 'player', title: 'About your player', sub: 'A few basics so we can get to know them.', fields: [
+    { name: 'playerName', label: 'Player Name', type: 'text', full: true },
+    { name: 'age', label: 'Age', type: 'number', min: 3, max: 99 },
+    { name: 'grade', label: 'Grade', type: 'text', placeholder: 'e.g. 5th' },
+    { name: 'school', label: 'School', type: 'text', full: true }
+  ]},
+  { id: 'background', title: 'Tennis background', sub: "There are no wrong answers. This helps us plan the trial.", fields: [
+    { name: 'howLong', label: 'How long has your player played tennis?', type: 'chips', options: ['Brand new', 'Less than 6 months', '6–12 months', '1–2 years', '3+ years'], full: true },
+    { name: 'currentTraining', label: 'Where does your player currently train?', type: 'text', placeholder: 'Club, school team, coach, or "Not currently"', full: true },
+    { name: 'frequency', label: 'How often do they currently train?', type: 'chips', options: ['Not currently', 'Once a week', '2–3 times a week', '4+ times a week'], full: true },
+    { name: 'tournaments', label: 'Does your player currently compete in tournaments?', type: 'chips', options: ['Yes', 'No', 'Not yet, but interested'], full: true },
+    { name: 'utr', label: 'Current UTR if known?', type: 'text', placeholder: 'e.g. 4.5, or "Unknown"', hint: 'Not sure? Just type "Unknown".' },
+    { name: 'level', label: 'How would you currently describe their current level (beginner to advanced)?', type: 'chips', options: ['Beginner', 'Advanced beginner', 'Intermediate', 'Advanced'], full: true }
+  ]},
+  { id: 'goals', title: 'Goals', sub: 'Select everything that applies.', fields: [
+    { name: 'improve', label: 'What would you most like your player to improve?', type: 'checks', full: true,
+      options: ['Fundamentals', 'Stroke Development', 'Movement/footwork', 'Athleticism/fitness', 'Consistency', 'Match Play', 'School Tennis', 'Tournament Prep', 'Competitive Development', 'Confidence', 'Long-term Development', 'Not Sure'] }
+  ]},
+  { id: 'final', title: 'Almost done', sub: 'Last few details before your trial.', fields: [
+    { name: 'location', label: 'Preferred location (Melissa/Anna)?', type: 'location', full: true },
+    { name: 'notes', label: "Anything else you'd like our coaches to know before the trial?", type: 'textarea', placeholder: 'Injuries, scheduling needs, goals, personality…', full: true },
+    { name: 'heard', label: 'How did you hear about NXG?', type: 'chips', options: ['Google', 'Instagram / Facebook', 'Friend or family', 'School', 'Drove by', 'Other'], full: true }
+  ]},
+  { id: 'review', title: 'Review & submit', sub: "Double-check your answers, then send them to our enrollment team." }
+];
+
+const LOCATIONS = [
+  { v: 'Anna', d: '1107 Rosamond Pkwy' },
+  { v: 'Melissa', d: '3059 Champions Way' },
+  { v: 'Either', d: "Whichever fits best" }
+];
+
+/* ---- State with safe local draft ---- */
+const KEY = 'nxg-trial-draft-v1';
+let data = {}, step = 0, maxStep = 0;
+try { const s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s) { data = s.data || {}; maxStep = Math.min(s.maxStep || 0, STEPS.length - 2); step = 0; } } catch (e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify({ data, maxStep })); flashSaved(); } catch (e) {} };
+let savedTimer;
+function flashSaved() { const s = document.getElementById('saved'); s.hidden = false; clearTimeout(savedTimer); savedTimer = setTimeout(() => s.hidden = true, 1800); }
+
+const host = document.getElementById('stepHost');
+const form = document.getElementById('trialForm');
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const allFields = STEPS.flatMap(s => s.fields || []);
+
+function fieldHTML(f) {
+  const v = data[f.name];
+  const req = '<span class="req">*</span>';
+  const id = 'f_' + f.name;
+  let control = '';
+  if (f.type === 'chips') {
+    control = `<div class="chips" role="radiogroup" aria-labelledby="${id}_l">${f.options.map(o =>
+      `<label class="chip"><input type="radio" name="${f.name}" value="${esc(o)}"${v === o ? ' checked' : ''}><span>${esc(o)}</span></label>`).join('')}</div>`;
+    if (f.name === 'heard') control += `<input class="input" style="margin-top:10px${v && v.startsWith('Other') ? '' : ';display:none'}" id="heardOther" placeholder="Tell us where" value="${esc(v && v.startsWith('Other: ') ? v.slice(7) : '')}">`;
+  } else if (f.type === 'checks') {
+    const arr = Array.isArray(v) ? v : [];
+    control = `<div class="chips" role="group" aria-labelledby="${id}_l">${f.options.map(o =>
+      `<label class="chip"><input type="checkbox" name="${f.name}" value="${esc(o)}"${arr.includes(o) ? ' checked' : ''}><span>${esc(o)}</span></label>`).join('')}</div>`;
+  } else if (f.type === 'location') {
+    control = `<div class="loc-cards" role="radiogroup" aria-labelledby="${id}_l">${LOCATIONS.map(l =>
+      `<label class="loc-card"><input type="radio" name="${f.name}" value="${l.v}"${v === l.v ? ' checked' : ''}><span><b>${l.v}</b><small>${l.d}</small></span></label>`).join('')}</div>`;
+  } else if (f.type === 'textarea') {
+    control = `<textarea class="input" id="${id}" name="${f.name}" placeholder="${esc(f.placeholder || '')}">${esc(v || '')}</textarea>`;
+  } else {
+    control = `<input class="input" id="${id}" name="${f.name}" type="${f.type}" value="${esc(v || '')}"${f.autocomplete ? ` autocomplete="${f.autocomplete}"` : ''}${f.placeholder ? ` placeholder="${esc(f.placeholder)}"` : ''}${f.min ? ` min="${f.min}" max="${f.max}" inputmode="numeric"` : ''}>`;
+  }
+  const isGroup = ['chips', 'checks', 'location'].includes(f.type);
+  const lab = isGroup ? `<span class="q" id="${id}_l">${esc(f.label)}${req}</span>` : `<label for="${id}">${esc(f.label)}${req}</label>`;
+  return `<div class="field${f.full ? ' full' : ''}" data-field="${f.name}">${lab}${control}${f.hint ? `<span class="hint">${esc(f.hint)}</span>` : ''}<span class="err" role="alert"></span></div>`;
+}
+
+function reviewHTML() {
+  return `<div class="review">${STEPS.slice(0, -1).map((s, i) => `
+    <section class="rv"><header>${esc(s.title)}<button type="button" data-goto="${i}">Edit</button></header>
+      <dl>${s.fields.map(f => `<dt>${esc(f.label)}</dt><dd>${esc(fmt(data[f.name])) || '<span style="color:var(--muted)">—</span>'}</dd>`).join('')}</dl>
+    </section>`).join('')}</div>
+    <div id="submitError"></div>`;
+}
+const fmt = v => Array.isArray(v) ? v.join(', ') : (v ?? '');
+
+function render() {
+  const s = STEPS[step];
+  host.innerHTML = `<div class="step">
+      <span class="step-label">Step ${step + 1} of ${STEPS.length}</span>
+      <h2 class="display">${esc(s.title)}</h2>
+      <p class="sub">${esc(s.sub)}</p>
+      ${s.fields ? `<div class="fields">${s.fields.map(fieldHTML).join('')}</div>` : reviewHTML()}
+    </div>`;
+  document.getElementById('bar').style.width = ((step) / (STEPS.length - 1) * 100) + '%';
+  document.getElementById('back').style.visibility = step === 0 ? 'hidden' : 'visible';
+  document.getElementById('next').innerHTML = step === STEPS.length - 1
+    ? `Submit ${NXG.arrow}` : `Continue ${NXG.arrow}`;
+  document.getElementById('rail').innerHTML = STEPS.map((x, i) =>
+    `<li class="${i === step ? 'active' : i <= maxStep ? 'done' : ''}"><button type="button" ${i <= maxStep && i !== step ? `data-goto="${i}"` : 'tabindex="-1"'}><span class="dot">${i < maxStep || (i <= maxStep && i !== step) ? '✓' : i + 1}</span><span class="lbl">${esc(x.title)}</span></button></li>`).join('');
+  wire();
+}
+
+function wire() {
+  host.querySelectorAll('input,textarea').forEach(el => {
+    el.addEventListener('input', () => { collect(); el.closest('.field')?.classList.remove('invalid'); save(); });
+    el.addEventListener('change', () => {
+      collect(); el.closest('.field')?.classList.remove('invalid');
+      if (el.name === 'heard') { const o = document.getElementById('heardOther'); o.style.display = el.value === 'Other' ? '' : 'none'; if (el.value === 'Other') o.focus(); }
+      if (el.name === 'improve' && el.value === 'Not Sure' && el.checked) host.querySelectorAll('input[name=improve]').forEach(c => { if (c.value !== 'Not Sure') c.checked = false; });
+      if (el.name === 'improve' && el.value !== 'Not Sure' && el.checked) { const ns = host.querySelector('input[name=improve][value="Not Sure"]'); if (ns) ns.checked = false; }
+      collect(); save();
+    });
+  });
+  document.querySelectorAll('[data-goto]').forEach(b => b.addEventListener('click', () => go(+b.dataset.goto)));
+}
+
+function collect() {
+  const s = STEPS[step]; if (!s.fields) return;
+  s.fields.forEach(f => {
+    if (f.type === 'checks') data[f.name] = [...host.querySelectorAll(`input[name="${f.name}"]:checked`)].map(i => i.value);
+    else if (['chips', 'location'].includes(f.type)) {
+      const c = host.querySelector(`input[name="${f.name}"]:checked`); data[f.name] = c ? c.value : '';
+      if (f.name === 'heard' && data.heard === 'Other') { const o = document.getElementById('heardOther').value.trim(); data.heard = o ? 'Other: ' + o : 'Other'; }
+    } else { const el = host.querySelector(`[name="${f.name}"]`); data[f.name] = el ? el.value.trim() : ''; }
+  });
+}
+
+function validate() {
+  const s = STEPS[step]; if (!s.fields) return true;
+  let firstBad = null;
+  s.fields.forEach(f => {
+    const v = data[f.name]; let msg = '';
+    if (f.type === 'checks' ? !(v && v.length) : !v) msg = f.type === 'checks' ? 'Please choose at least one.' : (['chips', 'location'].includes(f.type) ? 'Please choose an option.' : 'This field is required.');
+    else if (f.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) msg = 'Please enter a valid email address.';
+    else if (f.type === 'tel' && v.replace(/\D/g, '').length < 10) msg = 'Please enter a 10-digit mobile number.';
+    else if (f.name === 'age' && (+v < 3 || +v > 99)) msg = 'Please enter a valid age.';
+    const el = host.querySelector(`[data-field="${f.name}"]`);
+    el.classList.toggle('invalid', !!msg); el.querySelector('.err').textContent = msg;
+    if (msg && !firstBad) firstBad = el;
+  });
+  if (firstBad) { firstBad.scrollIntoView({ behavior: 'smooth', block: 'center' }); (firstBad.querySelector('input,textarea'))?.focus({ preventScroll: true }); return false; }
+  return true;
+}
+
+function go(i) {
+  collect();
+  if (i > step && !validate()) return;
+  step = Math.max(0, Math.min(i, STEPS.length - 1));
+  maxStep = Math.max(maxStep, step);
+  save(); render();
+  document.querySelector('.fcard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+document.getElementById('back').addEventListener('click', () => go(step - 1));
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+  if (step < STEPS.length - 1) return go(step + 1);
+  // validate every step before sending
+  for (let i = 0; i < STEPS.length - 1; i++) {
+    const missing = STEPS[i].fields.some(f => f.type === 'checks' ? !(data[f.name] || []).length : !data[f.name]);
+    if (missing) { step = i; render(); validate(); return; }
+  }
+  await submit();
+});
+
+function asText() {
+  return allFields.map(f => `${f.label}\n${fmt(data[f.name])}`).join('\n\n');
+}
+
+const startedAt = Date.now();
+
+function emailFallback(subject) {
+  const body = encodeURIComponent('Hi NXG Enrollment Team,\n\nI would like to book a free trial. Here are our answers:\n\n' + asText() + '\n\nThank you!');
+  location.href = `mailto:${ENROLLMENT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${body}`;
+  done(true);
+}
+
+async function submit() {
+  const btn = document.getElementById('next');
+  const subject = `Free Trial Request: ${data.playerName} (${data.location})`;
+
+  // Spam guards: hidden honeypot field and a minimum fill time.
+  const honey = document.getElementById('hp_company');
+  if ((honey && honey.value) || Date.now() - startedAt < 4000) { done(false); return; }
+
+  btn.disabled = true; btn.textContent = 'Sending…';
+  const answers = Object.fromEntries(allFields.map(f => [f.label, fmt(data[f.name])]));
+  const payload = {
+    _subject: subject,
+    _template: 'table',
+    _captcha: 'false',
+    _replyto: data.email,
+    email: data.email,
+    ...answers,
+    'Submitted': new Date().toLocaleString('en-US', { timeZone: 'America/Chicago' }) + ' (Central)'
+  };
+
+  try {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 15000);
+    const r = await fetch(ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload),
+      signal: ctrl.signal
+    });
+    clearTimeout(t);
+    const res = await r.json().catch(() => ({}));
+    // FormSubmit answers 200 with success "false" until the form is activated.
+    const ok = r.ok && String(res.success ?? res.ok ?? 'true') !== 'false';
+    if (!ok) throw new Error(res.message || 'HTTP ' + r.status);
+    done(false);
+  } catch (err) {
+    console.warn('Form delivery failed:', err);
+    btn.disabled = false; btn.innerHTML = `Try again ${NXG.arrow}`;
+    document.getElementById('submitError').innerHTML = `
+      <div class="form-error">We couldn't send your request just now.
+        <button type="button" id="mailFallback" style="border:0;background:none;color:inherit;font-weight:700;text-decoration:underline;cursor:pointer;padding:0">Send it by email instead</button>
+        or call <a href="tel:+12142939235" style="font-weight:600">214-293-9235</a>.</div>`;
+    document.getElementById('mailFallback').addEventListener('click', () => emailFallback(subject));
+  }
+}
+
+function done(viaEmail) {
+  try { localStorage.removeItem(KEY); } catch (e) {}
+  document.getElementById('bar').style.width = '100%';
+  document.getElementById('navRow').hidden = true;
+  document.querySelectorAll('#rail li').forEach(li => { li.className = 'done'; li.querySelector('.dot').textContent = '✓'; });
+  host.innerHTML = `<div class="success">
+      <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 12 5 5 9-10"/></svg></div>
+      <h2 class="display">${viaEmail ? 'Almost there!' : "You're all set!"}</h2>
+      <p>${viaEmail
+        ? `Your email app should open with ${esc(data.playerName)}'s answers filled in. Just press <b>Send</b> and our enrollment team will reach out to schedule the trial.`
+        : `Thanks, ${esc(data.parentName.split(' ')[0])}! Our enrollment team will reach out soon to schedule ${esc(data.playerName)}'s free on-court trial.`}</p>
+      ${viaEmail ? `<div class="notice">Email app didn't open? <button type="button" id="copyBtn" style="border:0;background:none;color:var(--blue);font-weight:700;cursor:pointer;padding:0">Copy your answers</button> and send them to <a href="mailto:${ENROLLMENT_EMAIL}" style="font-weight:600">${ENROLLMENT_EMAIL}</a>.</div>` : ''}
+      <div class="actions">
+        <a class="btn btn-primary" href="schedule.html">Browse the class schedule ${NXG.arrow}</a>
+        <a class="btn btn-outline" href="index.html">Back to home</a>
+      </div>
+    </div>`;
+  const text = asText();
+  document.getElementById('copyBtn')?.addEventListener('click', async e => {
+    try { await navigator.clipboard.writeText(text); e.target.textContent = 'Copied!'; } catch { e.target.textContent = 'Copy failed'; }
+  });
+}
+
+render();
+</script>
+</body>
+</html>
