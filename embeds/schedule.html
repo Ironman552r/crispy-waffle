@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NXG Class Schedule</title>
+<style>
+  html,body{margin:0;padding:0;background:#fff;font-family:Inter,system-ui,sans-serif}
+  body{padding:8px 4px 16px}
+  /* nudge Momence accents toward NXG blue */
+  #momence-plugin-host-schedule button[class*="primary"],
+  #momence-plugin-host-schedule a[class*="primary"]{background:#0a5cff!important;border-color:#0a5cff!important}
+</style>
+</head>
+<body>
+<!-- Momence host schedule: same plugin and host as the original NXG site -->
+<div id="ribbon-schedule"></div>
+<script async type="module"
+  host_id="222361"
+  teacher_ids="[]"
+  location_ids="[]"
+  tag_ids="[]"
+  hide_drop_in_price="true"
+  default_filter="show-all"
+  locale="en"
+  src="https://momence.com/plugin/host-schedule/host-schedule.js"></script>
+<script>
+  // Report height to the parent page so the iframe grows with the schedule.
+  (function () {
+    let last = 0;
+    const send = () => {
+      const h = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+      if (Math.abs(h - last) > 2) { last = h; parent.postMessage({ type: 'nxg_schedule_resize', height: h }, '*'); }
+    };
+    new ResizeObserver(send).observe(document.body);
+    new MutationObserver(send).observe(document.body, { childList: true, subtree: true });
+    setInterval(send, 1000);
+  })();
+</script>
+</body>
+</html>
