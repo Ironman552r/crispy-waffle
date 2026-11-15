@@ -3,7 +3,7 @@
   document.documentElement.classList.remove('no-js');
 
   const CONTACT = {
-    email: 'enrollment@nxg.tennis',
+    email: 'killian@nxg.tennis',
     phone: '214-293-9235',
     phoneHref: 'tel:+12142939235',
     locations: [

@@ -32,7 +32,7 @@ embeds/
 
 ## Questionnaire delivery
 
-`trial-form.html` sends answers to `enrollment@nxg.tennis` via [FormSubmit](https://formsubmit.co) (free, no account needed).
+`trial-form.html` sends answers to `killian@nxg.tennis` via [FormSubmit](https://formsubmit.co) (free, no account needed).
 
 1. After the site is live, submit the form once.
 2. FormSubmit emails an **Activate Form** link to the enrollment inbox; click it.
@@ -49,6 +49,10 @@ python -m http.server 5173
 ```
 
 Then visit http://localhost:5173.
+
+## Publishing changes
+
+This folder is a git repository linked to GitHub. To publish edits, double-click **`publish.cmd`**. It commits everything that changed, syncs with GitHub and pushes, and the live site updates about a minute later.
 
 ## Publish with GitHub Pages
 
