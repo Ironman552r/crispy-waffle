@@ -391,8 +391,20 @@ async function submit() {
   } catch (err) {
     console.warn('Form delivery failed:', err);
     btn.disabled = false; btn.innerHTML = `Try again ${NXG.arrow}`;
+    const reason = String(err && err.message || '');
+    let detail = '';
+    if (location.protocol === 'file:' || /web server|HTML files/i.test(reason)) {
+      detail = `This page was opened as a file on your computer. The form only sends from the live website, so open it there instead.`;
+    } else if (/activat/i.test(reason)) {
+      detail = `This form hasn't been activated yet. An "Activate Form" email from FormSubmit was sent to ${ENROLLMENT_EMAIL}. Click the button in that email once (check spam too), then submit again.`;
+    } else if (err && err.name === 'AbortError') {
+      detail = `The request timed out. Please check your connection and try again.`;
+    } else if (reason) {
+      detail = `Reason: ${esc(reason)}`;
+    }
     document.getElementById('submitError').innerHTML = `
       <div class="form-error">We couldn't send your request just now.
+        ${detail ? `<div style="margin:6px 0">${detail}</div>` : ''}
         <button type="button" id="mailFallback" style="border:0;background:none;color:inherit;font-weight:700;text-decoration:underline;cursor:pointer;padding:0">Send it by email instead</button>
         or call <a href="tel:+12142939235" style="font-weight:600">214-293-9235</a>.</div>`;
     document.getElementById('mailFallback').addEventListener('click', () => emailFallback(subject));
